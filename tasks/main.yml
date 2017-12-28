@@ -1,0 +1,26 @@
+---
+
+- name: Add fluentd repository gpg key
+  rpm_key:
+    state: present
+    key: https://packages.treasuredata.com/GPG-KEY-td-agent
+
+- name: Add fluentd repository
+  yum_repository:
+    name: TreasureData
+    description: TreasureData fluentd repo
+    baseurl: http://packages.treasuredata.com/2/redhat/\$releasever/\$basearch
+    gpgcheck: 1
+    gpgkey: https://packages.treasuredata.com/GPG-KEY-td-agent
+
+- name: Install fluentd
+  yum:
+    name: td-agent
+    state: present
+
+- name: Start fluentd service
+  systemd:
+    name: td-agent
+    state: started
+    enabled: yes
+    daemon_reload: yes
